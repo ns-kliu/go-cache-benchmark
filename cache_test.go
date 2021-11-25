@@ -49,9 +49,11 @@ func BenchmarkGoCacheParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			c.Add(randomPath(), randomSha1(), time.Hour*2)
-			value, found := c.Get(randomPath())
-			if found {
-				_ = value
+			for i := 0; i < 3; i++ {
+				value, found := c.Get(randomPath())
+				if found {
+					_ = value
+				}
 			}
 		}
 	})
@@ -82,10 +84,14 @@ func BenchmarkFreecacheParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			c.Set([]byte(randomPath()), []byte(randomSha1()), 2*60*60)
-			value, err := c.Get([]byte(randomPath()))
-			if err == nil {
-				_ = value
+
+			for i := 0; i < 3; i++ {
+				value, err := c.Get([]byte(randomPath()))
+				if err == nil {
+					_ = value
+				}
 			}
+
 		}
 	})
 }
@@ -115,9 +121,11 @@ func BenchmarkFsWatcherParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			c.Set(randomPath(), randomSha1())
-			value, ok := c.Get(randomPath())
-			if ok {
-				_ = value
+			for i := 0; i < 3; i++ {
+				value, ok := c.Get(randomPath())
+				if ok {
+					_ = value
+				}
 			}
 		}
 	})

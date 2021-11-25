@@ -34,7 +34,7 @@ func (w *Watcher) Get(key string) (string, bool) {
 		return "", false
 	}
 	if time.Now().UnixNano()-entry.TimestampUnixNano < w.fingerprintCacheExpirationNano {
-		return entry.val, false
+		return entry.val, true
 	}
 	return "", false
 }
